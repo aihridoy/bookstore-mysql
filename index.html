@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ABC Bookstore - Home</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>ABC Bookstore</h1>
+        <nav>
+          <a href="index.html">Home</a>
+          <a href="products.php">Browse Books</a>
+          <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+        </nav>
+      </header>
+
+      <main class="welcome-section">
+        <h2>Welcome to ABC Bookstore!</h2>
+        <p>
+          Discover your next favorite book from our carefully curated
+          collection.
+        </p>
+        <p>
+          We offer a wide range of books across various genres including
+          Fiction, Non-Fiction, Mystery, and Self-Help.
+        </p>
+
+        <div class="cta-section">
+          <a href="products.php" class="btn btn-primary"
+            >Browse Our Collection</a
+          >
+        </div>
+
+        <div class="features">
+          <div class="feature">
+            <h3>Wide Selection</h3>
+            <p>Choose from our diverse collection of books</p>
+          </div>
+          <div class="feature">
+            <h3>Best Prices</h3>
+            <p>Affordable prices on all our books</p>
+          </div>
+          <div class="feature">
+            <h3>Easy Checkout</h3>
+            <p>Simple and secure ordering process</p>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <p>&copy; 2024 ABC Bookstore. All rights reserved.</p>
+      </footer>
+    </div>
+
+    <script>
+      // Update cart count on page load
+      function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        document.getElementById("cart-count").textContent = totalItems;
+      }
+      updateCartCount();
+    </script>
+  </body>
+</html>
