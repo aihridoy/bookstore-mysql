@@ -14,38 +14,45 @@
           <a href="index.html">Home</a>
           <a href="products.php">Browse Books</a>
           <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+          <div id="auth-links" class="auth-nav">
+            <a href="login.html">Login</a>
+            <span class="nav-divider">|</span>
+            <a href="signup.html">Sign Up</a>
+          </div>
         </nav>
       </header>
 
       <main class="welcome-section">
-        <h2>Welcome to ABC Bookstore!</h2>
-        <p>
-          Discover your next favorite book from our carefully curated
-          collection.
-        </p>
-        <p>
-          We offer a wide range of books across various genres including
-          Fiction, Non-Fiction, Mystery, and Self-Help.
-        </p>
+        <div class="hero-content">
+          <h2>Welcome to ABC Bookstore!</h2>
+          <p>
+            Discover your next favorite book from our carefully curated
+            collection.
+          </p>
+          <p>
+            We offer a wide range of books across various genres including
+            Fiction, Non-Fiction, Mystery, and Self-Help.
+          </p>
 
-        <div class="cta-section">
-          <a href="products.php" class="btn btn-primary"
-            >Browse Our Collection</a
-          >
-        </div>
+          <div class="cta-section">
+            <a href="products.php" class="btn btn-primary"
+              >Browse Our Collection</a
+            >
+          </div>
 
-        <div class="features">
-          <div class="feature">
-            <h3>Wide Selection</h3>
-            <p>Choose from our diverse collection of books</p>
-          </div>
-          <div class="feature">
-            <h3>Best Prices</h3>
-            <p>Affordable prices on all our books</p>
-          </div>
-          <div class="feature">
-            <h3>Easy Checkout</h3>
-            <p>Simple and secure ordering process</p>
+          <div class="features">
+            <div class="feature">
+              <h3>Wide Selection</h3>
+              <p>Choose from our diverse collection of books</p>
+            </div>
+            <div class="feature">
+              <h3>Best Prices</h3>
+              <p>Affordable prices on all our books</p>
+            </div>
+            <div class="feature">
+              <h3>Easy Checkout</h3>
+              <p>Simple and secure ordering process</p>
+            </div>
           </div>
         </div>
       </main>
@@ -62,7 +69,33 @@
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
         document.getElementById("cart-count").textContent = totalItems;
       }
+
+      function updateAuthLinks() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const authLinks = document.getElementById("auth-links");
+
+        if (user) {
+          authLinks.innerHTML = `
+                    <span class="user-email">${user.email}</span>
+                    <span class="nav-divider">|</span>
+                    <a href="#" onclick="logout(); return false;">Logout</a>
+                `;
+        } else {
+          authLinks.innerHTML = `
+                    <a href="login.html">Login</a>
+                    <span class="nav-divider">|</span>
+                    <a href="signup.html">Sign Up</a>
+                `;
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "php/logout.php";
+      }
+
       updateCartCount();
+      updateAuthLinks();
     </script>
   </body>
 </html>

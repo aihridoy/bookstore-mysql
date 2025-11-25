@@ -1,4 +1,5 @@
 <?php
+session_start();
 header('Content-Type: application/json');
 require_once 'db_config.php';
 
@@ -7,7 +8,7 @@ $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
 // Validate input
-if (!isset($data['customer_name']) || !isset($data['email']) || !isset($data['address']) || !isset($data['items'])) {
+if (!isset($data['user_id']) || !isset($data['customer_name']) || !isset($data['email']) || !isset($data['address']) || !isset($data['items'])) {
     echo json_encode(['success' => false, 'message' => 'Missing required fields']);
     exit;
 }
@@ -17,8 +18,8 @@ $conn->begin_transaction();
 
 try {
     // Insert order
-    $stmt = $conn->prepare("INSERT INTO orders (customer_name, email, address, total_amount) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("sssd", $data['customer_name'], $data['email'], $data['address'], $data['total']);
+    $stmt = $conn->prepare("INSERT INTO orders (user_id, customer_name, email, address, total_amount) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssd", $data['user_id'], $data['customer_name'], $data['email'], $data['address'], $data['total']);
     $stmt->execute();
     
     $order_id = $conn->insert_id;

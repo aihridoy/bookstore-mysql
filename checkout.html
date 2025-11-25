@@ -14,6 +14,9 @@
           <a href="index.html">Home</a>
           <a href="products.php">Browse Books</a>
           <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+          <span id="auth-links">
+            <a href="login.html">Login</a>
+          </span>
         </nav>
       </header>
 
@@ -52,7 +55,7 @@
 
           <div class="form-group">
             <label for="email">Email *</label>
-            <input type="email" id="email" name="email" required />
+            <input type="email" id="email" name="email" required readonly />
           </div>
 
           <div class="form-group">
@@ -80,10 +83,45 @@
         return JSON.parse(localStorage.getItem("cart")) || [];
       }
 
+      function getUser() {
+        return JSON.parse(localStorage.getItem("user"));
+      }
+
       function updateCartCount() {
         const cart = getCart();
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
         document.getElementById("cart-count").textContent = totalItems;
+      }
+
+      function updateAuthLinks() {
+        const user = getUser();
+        const authLinks = document.getElementById("auth-links");
+
+        if (user) {
+          authLinks.innerHTML = `
+                    <span style="color: white; margin-right: 10px;">${user.email}</span>
+                    <a href="#" onclick="logout(); return false;">Logout</a>
+                `;
+          document.getElementById("email").value = user.email;
+        } else {
+          authLinks.innerHTML = '<a href="login.html">Login</a>';
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "php/logout.php";
+      }
+
+      function checkAuth() {
+        const user = getUser();
+        if (!user) {
+          alert("Please login to place order");
+          localStorage.setItem("redirectAfterLogin", "checkout.html");
+          window.location.href = "login.html";
+          return false;
+        }
+        return true;
       }
 
       function displayOrderSummary() {
@@ -119,12 +157,18 @@
         .addEventListener("submit", async function (e) {
           e.preventDefault();
 
+          if (!checkAuth()) {
+            return;
+          }
+
           const cart = getCart();
+          const user = getUser();
           const formData = new FormData(this);
 
           const orderData = {
+            user_id: user.id,
             customer_name: formData.get("name"),
-            email: formData.get("email"),
+            email: user.email,
             address: formData.get("address"),
             items: cart,
             total: cart.reduce(
@@ -159,8 +203,13 @@
         });
 
       // Initialize
-      updateCartCount();
-      displayOrderSummary();
+      if (!checkAuth()) {
+        // Will redirect to login
+      } else {
+        updateCartCount();
+        updateAuthLinks();
+        displayOrderSummary();
+      }
     </script>
   </body>
 </html>
