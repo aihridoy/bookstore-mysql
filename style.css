@@ -301,6 +301,11 @@ main {
 
 /* Forms */
 .checkout-form {
+  max-width: 600px;
+  margin: 30px auto;
+}
+
+.checkout-main-form {
   width: 600px;
   margin: 30px auto;
 }
